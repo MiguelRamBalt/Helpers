@@ -42,13 +42,44 @@
     $scope.roleList2 = [];
 
     $scope.addOs = function(element) {
-      let aux =$scope.roleList2.find(function(e) {
-        return e.roleName == element.roleName;
-      });
-      if(!aux){
-        console.log(element);
-        $scope.roleList2.push( element );
-      }
+      getCompleteElement  =  function(  myElement,  currentList) {
+        currentList  =  currentList  ||  angular.copy(  $scope.roleList1);
+
+        let finalElement   =  [];
+        for (  i in  currentList)  {
+          if (  myElement.roleName  ==  currentList[  i].roleName)  {
+            finalElement  =  [];
+            finalElement[i]  =  myElement;
+            break;
+          }  else  {
+            if (  currentList[  i].children.length  >  0)  {
+              finalElement  = angular.copy(  currentList[  i]);
+              finalElement.children  = [];
+              finalElement.children = getCompleteElement(  myElement,  currentList[  i].children);
+            };
+          }
+        };
+
+        return  finalElement;
+      };
+      let nElement =  getCompleteElement(  element);
+      console.log(  nElement);
+
+      let aux  =  false;
+      if  (  $scope.roleList2.length > 0)  {
+        for  (  let iRole in $scope.roleList2)  {
+          if (  $scope.roleList2[  iRole].roleName  == nElement.roleName)  {
+            $scope.roleList2[  iRole]  =  angular.merge(  {},  $scope.roleList2[  iRole],  nElement);
+            aux  =  true;
+            break;
+          }
+        };
+
+        if  (  !aux)
+          $scope.roleList2.push( nElement);
+      }  else
+        $scope.roleList2.push( nElement);
+
     };
   });
 })();

@@ -49,37 +49,24 @@
         for (  i in  currentList)  {
           if (  myElement.roleName  ==  currentList[  i].roleName)  {
             finalElement  =  [];
+            finalElement[i]  =  [];
             finalElement[i]  =  myElement;
             break;
           }  else  {
             if (  currentList[  i].children.length  >  0)  {
-              finalElement  = angular.copy(  currentList[  i]);
-              finalElement.children  = [];
-              finalElement.children = getCompleteElement(  myElement,  currentList[  i].children);
+              finalElement  =  [];
+              finalElement[i]  = angular.copy(  currentList[  i]);
+              finalElement[i].children  = [];
+              finalElement[i].children = getCompleteElement(  myElement,  currentList[  i].children);
             };
           }
         };
-
         return  finalElement;
       };
       let nElement =  getCompleteElement(  element);
       console.log(  nElement);
-
-      let aux  =  false;
-      if  (  $scope.roleList2.length > 0)  {
-        for  (  let iRole in $scope.roleList2)  {
-          if (  $scope.roleList2[  iRole].roleName  == nElement.roleName)  {
-            $scope.roleList2[  iRole]  =  angular.merge(  {},  $scope.roleList2[  iRole],  nElement);
-            aux  =  true;
-            break;
-          }
-        };
-
-        if  (  !aux)
-          $scope.roleList2.push( nElement);
-      }  else
-        $scope.roleList2.push( nElement);
-
+      $scope.roleList2  =  angular.merge(  {},  $scope.roleList2,  nElement);
+      console.log(  $scope.roleList2);
     };
   });
 })();

@@ -52,7 +52,7 @@
             finalElement[  i]  =  angular.copy(  myElement);
             break;
           }  else  {
-            if (  currentList[  i].children.length  >  0)  {
+            if (  currentList[  i].children.length  >  0 || Object.keys(currentList[  i].children).length > 0)  {
               finalElement  =  {};
               finalElement[  i]  = angular.copy(  currentList[  i]);
               finalElement[  i].children  =  angular.extend(  {},  getCompleteElement(  myElement,  currentList[  i].children));
@@ -89,8 +89,12 @@
                     a + '.selectNodeHead(node)"  ng-dblclick="addOs(node)"></i>' + 
                 '<i class="normal" data-ng-hide="(node.' + d + '.length  || auxObjectLength(node.' + d +') != 0)" ></i>' +
                 '<span data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="addOs(node)">{{node.' + e +'}}</span>' +
-                '<div data-ng-hide="(node.collapsed)" data-tree-id="' + a + '" data-tree-model="node.' + d + '" data-node-id=' +
-                    (c.nodeId || "id") + " data-node-label=" + e + " data-node-children=" + d + "></div>" + 
+                '<div data-ng-hide="(node.collapsed)" ' +
+                    ' data-tree-id="' + a + '" ' + 
+                    ' data-tree-model="node.' + d + '" ' +
+                    ' data-node-id=' + (c.nodeId || "id") + 
+                    " data-node-label=" + e + 
+                    " data-node-children=" + d + "></div>" + 
               '</li>' + 
             '</ul>';
         a &&

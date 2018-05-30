@@ -45,28 +45,28 @@
       getCompleteElement  =  function(  myElement,  currentList) {
         currentList  =  currentList  ||  angular.copy(  $scope.roleList1);
 
-        let finalElement   =  [];
+        let finalElement   =  false;
         for (  i in  currentList)  {
           if (  myElement.roleName  ==  currentList[  i].roleName)  {
-            finalElement  =  [];
-            finalElement[i]  =  [];
-            finalElement[i]  =  myElement;
+            finalElement  =  {};
+            finalElement[  i]  =  angular.copy(  myElement);
             break;
           }  else  {
             if (  currentList[  i].children.length  >  0)  {
-              finalElement  =  [];
-              finalElement[i]  = angular.copy(  currentList[  i]);
-              finalElement[i].children  = [];
-              finalElement[i].children = getCompleteElement(  myElement,  currentList[  i].children);
+              finalElement  =  {};
+              finalElement[  i]  = angular.copy(  currentList[  i]);
+              finalElement[  i].children  =  angular.extend(  {},  getCompleteElement(  myElement,  currentList[  i].children));
             };
           }
         };
         return  finalElement;
       };
-      let nElement =  getCompleteElement(  element);
-      console.log(  nElement);
+      let  nElement =  getCompleteElement(  element);
       $scope.roleList2  =  angular.merge(  {},  $scope.roleList2,  nElement);
-      console.log(  $scope.roleList2);
+    };
+
+    $scope.auxObjectLength = function( obj)  {
+      return  Object.keys(obj).length;
     };
   });
 })();
@@ -81,33 +81,18 @@
           e = c.nodeLabel || "label",
           d = c.nodeChildren || "children",
           e =
-            '<ul><li data-ng-repeat="node in ' +
-            g +
-            '"><i class="collapsed" data-ng-show="node.' +
-            d +
-            '.length && node.collapsed" data-ng-click="' +
-            a +
-            '.selectNodeHead(node)"  ng-dblclick="addOs(node)"></i><i class="expanded" data-ng-show="node.' +
-            d +
-            '.length && !node.collapsed" data-ng-click="' +
-            a +
-            '.selectNodeHead(node)"  ng-dblclick="addOs(node)"></i><i class="normal" data-ng-hide="node.' +
-            d +
-            '.length"></i> <span data-ng-class="node.selected" data-ng-click="' +
-            a +
-            '.selectNodeLabel(node)"  ng-dblclick="addOs(node)">{{node.' +
-            e +
-            '}}</span><div data-ng-hide="node.collapsed" data-tree-id="' +
-            a +
-            '" data-tree-model="node.' +
-            d +
-            '" data-node-id=' +
-            (c.nodeId || "id") +
-            " data-node-label=" +
-            e +
-            " data-node-children=" +
-            d +
-            "></div></li></ul>";
+            '<ul>' + 
+              '<li data-ng-repeat="node in ' +  g + '">' + 
+                '<i class="collapsed" data-ng-show="(auxObjectLength(node.' + d +') || node.' + d + '.length) && node.collapsed" data-ng-click="' +
+                    a + '.selectNodeHead(node)"  ng-dblclick="addOs(node)">' + '</i>' + 
+                '<i class="expanded" data-ng-show="(auxObjectLength(node.' + d +') || node.' + d + '.length)  && !node.collapsed" data-ng-click="' +
+                    a + '.selectNodeHead(node)"  ng-dblclick="addOs(node)"></i>' + 
+                '<i class="normal" data-ng-hide="(node.' + d + '.length  || auxObjectLength(node.' + d +') != 0)" ></i>' +
+                '<span data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="addOs(node)">{{node.' + e +'}}</span>' +
+                '<div data-ng-hide="(node.collapsed)" data-tree-id="' + a + '" data-tree-model="node.' + d + '" data-node-id=' +
+                    (c.nodeId || "id") + " data-node-label=" + e + " data-node-children=" + d + "></div>" + 
+              '</li>' + 
+            '</ul>';
         a &&
           g &&
           (c.angularTreeview &&

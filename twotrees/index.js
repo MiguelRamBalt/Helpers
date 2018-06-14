@@ -43,7 +43,7 @@
 
     $scope.addOs = function(element) {
       getNoReferencedChildrenCopy = function(  element)  {
-        let newElement  = new Object();
+        var newElement  = new Object();
         newElement.roleName  =  element.roleName;
         newElement.roleId  =  element.roleId;
         newElement.children  = new  Object();
@@ -70,7 +70,7 @@
       getCompleteElement  =  function(  myElement,  currentList) {
         currentList  =  currentList  ||  angular.copy(  $scope.roleList1);
 
-        let finalElement   =  false;
+        var finalElement   =  false;
         for (  i in  currentList)  {
           if (  myElement.roleName  ==  currentList[  i].roleName)  {
             finalElement  =  new Object();
@@ -88,7 +88,7 @@
         return  finalElement;
       };
 
-      let  nElement =  angular.copy(  getCompleteElement(  angular.copy(  element)));
+      var  nElement =  angular.copy(  getCompleteElement(  angular.copy(  element)));
       $scope.roleList2  =  angular.merge( new Object() ,angular.copy( $scope.roleList2),  angular.copy(nElement));
     };
 
@@ -96,14 +96,14 @@
       getCompleteElement  =  function(  myElement,  currentList) {
         currentList  =  currentList  ||  angular.copy(  $scope.roleList2);
 
-        let finalElement   =  {};
+        var finalElement   =  {};
         for (  i in  currentList)  {
           if (  myElement.roleName  ==  currentList[  i].roleName)  {
             finalElement  =  angular.copy( currentList);
             delete finalElement[  i];
             break;
           }  else  {
-            let j  =  angular.copy(  i);
+            var j  =  angular.copy(  i);
             if (  currentList[  j].children.length  >  0 || Object.keys(currentList[  j].children).length > 0)  {
               finalElement = angular.copy( currentList);
               finalElement[  j]  = angular.copy(  currentList[  j]);

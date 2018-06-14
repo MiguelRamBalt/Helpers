@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div ng-app="myApp">
+        <div ng-controller="myController">
+            <div  chart  type="multiline" data="{{myPoints}}" width="500" stroke="0.4" height="200" ></div>
+            <div  chart  type="line" data="{{myPointsTwo}}" width="500" stroke="0.4" height="200" ></div>
+            <div  chart  type="line" data="{{myPointsTwo}}" width="300" stroke="0.4" height="100" ></div>
+            <div  chart  type="line" data="{{myPointsTwo}}" width="600" stroke="0.8" height="200" color="#ff0000" ></div>
+            <div  chart  type="line" data="{{myPointsTwo}}" stroke="0.4" ></div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

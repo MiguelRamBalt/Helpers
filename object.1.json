@@ -1,0 +1,38 @@
+{
+  "Tripwire: Cisco": [
+    {
+      "roleName": "Windows",
+      "roleId": "role1",
+      "children": [
+        { "roleName": "Windows 10", "roleId": "role11", "children": [] },
+        { "roleName": "Windows 8.1 ", "roleId": "role11", "children": [] },
+        {
+          "roleName": "Windows Server",
+          "roleId": "role12",
+          "children": [
+            {
+              "roleName": "Windows Server 2012 ",
+              "roleId": "role121",
+              "children": [
+                {
+                  "roleName": "Windows Server 2012 R2",
+                  "roleId": "role1211",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "roleName": "Windows Server 2016",
+              "roleId": "role1212",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+
+    { "roleName": "Linux", "roleId": "role2", "children": [] },
+
+    { "roleName": "Macintosh", "roleId": "role3", "children": [] }
+  ]
+}

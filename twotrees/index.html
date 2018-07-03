@@ -34,14 +34,14 @@
             <div style="display:table-row; width:500px;">
                 <div style="display:table-cell; width:250px;">
                     <!-- FIRST TREE -->
-                    <div data-angular-treeview="true" data-tree-id="tree01" data-tree-model="roleList1" data-node-id="roleId" data-node-label="roleName"
+                    <div tree-model data-angular-treeview="true" data-tree-id="tree01" tree="roleList1"  treecatcher="roleList2" treebinding="roleList1" data-node-id="roleId" data-node-label="roleName" 
                         data-node-children="children" data-tree-childrens-action="add">
                     </div>
                 </div>
                 <div style="display:table-cell; width:250px;">
 
                     <!-- SECOND TREE -->
-                    <div data-angular-treeview="true" data-tree-id="tree02" data-tree-model="roleList2" data-node-id="roleId" data-node-label="roleName"
+                    <div tree-model data-angular-treeview="true" data-tree-id="tree02" tree="roleList2" treecatcher="roleList1" treebinding="roleList2" data-node-id="roleId" data-node-label="roleName"
                         data-node-children="children" data-tree-childrens-action="remove">
                     </div>
 

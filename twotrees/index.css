@@ -13,7 +13,7 @@ div[data-angular-treeview]{
   text-decoration: none;
 }
 
-div[data-tree-model] ul {
+div[tree-model] ul {
   margin: 0;
   padding: 0;
   list-style: none; 
@@ -21,35 +21,35 @@ div[data-tree-model] ul {
   overflow: hidden;
 }
 
-div[data-tree-model] li {
+div[tree-model] li {
   position: relative;
   padding: 0 0 0 20px;
   line-height: 20px;
 }
 
-div[data-tree-model] li .expanded {
+div[tree-model] li .expanded {
   padding: 1px 10px;
   background-image: url("http://cfile23.uf.tistory.com/image/205B973A50C13F4B19D9BD");
   background-repeat: no-repeat;
 }
 
-div[data-tree-model] li .collapsed {
+div[tree-model] li .collapsed {
   padding: 1px 10px;
   background-image: url("http://cfile23.uf.tistory.com/image/1459193A50C13F4B1B05FB");
   background-repeat: no-repeat;
 }
 
-div[data-tree-model] li .normal {
+div[tree-model] li .normal {
   padding: 1px 10px;
   background-image: url("http://cfile23.uf.tistory.com/image/165B663A50C13F4B196CCA");
   background-repeat: no-repeat;
 }
 
-div[data-tree-model] li i, div[data-tree-model] li span {
+div[tree-model] li i, div[tree-model] li span {
   cursor: pointer;
 }
 
-div[data-tree-model] li .selected {
+div[tree-model] li .selected {
   background-color: #aaddff;
   font-weight: bold;
   padding: 1px 5px;

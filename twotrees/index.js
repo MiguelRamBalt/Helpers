@@ -57,6 +57,13 @@
           item_binding:  '=treebinding'
         },
         link: function( scope, h, c) {
+          var a = c.treeId,
+            action = (  c.treeChildrensAction == "add") ? "addOs(node)" : (  c.treeChildrensAction == 'remove'  ?  "removeOs(node)" : "addOs(node)"),
+            actInd =  'data-tree-childrens-action="' + ( c.treeChildrensAction  ?  (  c.treeChildrensAction) :  'add') + '"',
+            g = c.tree,
+            e = c.nodeLabel || "label",
+            d = c.nodeChildren || "children";
+
           scope.addOs = function(element) {
             var getNoReferencedChildrenCopy = function(  element)  {
               var newElement  = new Object();
@@ -95,8 +102,9 @@
                   return finalElement;
                 }  else  {
                   if (  currentList[  i].children.length  >  0 || Object.keys(currentList[  i].children).length > 0)  {
-                    finalElement  =  {};
-                    finalElement[  i]  = angular.copy(  currentList[  i]);
+                    finalElement  =  new Object();
+                    finalElement[  i]  =  new Object();
+                    finalElement[  i]  =  angular.copy(  currentList[  i]);
                     finalElement[  i].children  =  angular.merge(  new Object(), getCompleteElement(  myElement,  angular.copy(  currentList[  i].children)));
                   };
                 }
@@ -104,7 +112,11 @@
               return  finalElement;
             };
 
+
+
             var  nElement =  angular.copy(  getCompleteElement(  angular.copy(  element)));
+            if  (  scope.item_catcher.length  == 0)
+              scope.item_catcher  = new  Object();
             scope.item_catcher  =  angular.merge( scope.item_catcher,  angular.copy(nElement));
             console.log(  scope.item_catcher);
           };
@@ -116,13 +128,7 @@
             return  Object.keys(obj).length;
           };
 
-          var a = c.treeId,
-            action = (  c.treeChildrensAction == "add") ? "addOs(node)" : (  c.treeChildrensAction == 'remove'  ?  "removeOs(node)" : "addOs(node)"),
-            actInd =  'data-tree-childrens-action="' + ( c.treeChildrensAction  ?  (  c.treeChildrensAction) :  'add') + '"',
-            g = c.tree,
-            e = c.nodeLabel || "label",
-            d = c.nodeChildren || "children",
-            e =
+          var  e =
               '<ul>' + 
                 '<li data-ng-repeat="node in item_binding">' + 
                   '<i class="collapsed" data-ng-show="(auxObjectLength(node.' + d +') || node.' + d + '.length) && node.collapsed" ' + 
@@ -133,7 +139,7 @@
                   '<span data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="'  + action + '"> ' + 
                     '{{node.' + e +'}} ' + 
                   '</span>' +
-                  '<div tree-model data-ng-hide="(node.collapsed)" data-tree-id="' + a + '" tree="item"  treecatcher="item_catcher" treebinding="node.'+ d +'" ' + actInd +
+                  '<div tree-model data-ng-hide="(node.collapsed ||  node === empty)" data-tree-id="' + a + '" tree="item"  treecatcher="item_catcher" treebinding="node.'+ d +'" ' + actInd +
                       ' data-node-id=' + (c.nodeId || "id") + ' data-node-label=' + e + ' data-node-children=' + d + '>' +
                   '</div>' + 
                 '</li>' + 

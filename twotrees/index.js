@@ -64,16 +64,23 @@
             e = c.nodeLabel || "label",
             d = c.nodeChildren || "children";
 
+          scope.auxObjectLength = function( obj)  {
+            if (  obj  === undefined)
+              return  false;
+
+            return  Object.keys(obj).length;
+          };
+
           scope.addOs = function(element) {
             var getNoReferencedChildrenCopy = function(  element)  {
               var newElement  = new Object();
               newElement.roleName  =  element.roleName;
               newElement.roleId  =  element.roleId;
               newElement.children  = new  Object();
-              if (  element.children.length  > 0  ||  Object.keys(  element.children).length  >  0) {  
+              if (  element.children  &&  (element.children.length  > 0  ||  scope.auxObjectLength(  element.children)  >  0)) {  
                 for  (var  j  in  element.children)  {
                   newElement.children[  j]  =  new  Object();
-                  if (  element.children[  j].length  > 0  ||  Object.keys(  element.children[  j]).length  >  0) {
+                  if (  element.children[  j].length  > 0  ||  scope.auxObjectLength(  element.children[  j]).length  >  0) {
                     newElement.children[  j]  =  angular.copy(  getNoReferencedChildrenCopy(  element.children[  j]));
                   }  else  {
                     newElement.children[  j].roleName  =  element.children[  j].roleName;
@@ -90,42 +97,47 @@
               return newElement;
             }
 
-            var getCompleteElement  =  function(  myElement,  currentList) {
-              currentList  =  currentList  ||  angular.copy( scope.item);
+            var getCompleteElement  =  function(  myElement,  currentList,  flag) {
+              currentList  =  currentList  ||  angular.copy( scope.item),
+              flag  =  flag  || false;
 
               var finalElement   =  false;
               for (  var  i in  currentList)  {
                 if (  myElement.roleName  ==  currentList[  i].roleName)  {
                   finalElement  =  new Object();
-                  finalElement[  i]  =  new Object();
-                  finalElement[  i]  =  getNoReferencedChildrenCopy(  myElement);
+                  if  (  !flag)  {
+                    finalElement[  i]  =  new Object();
+                    finalElement[  i]  =  getNoReferencedChildrenCopy(  myElement);
+                    var  newCatcher  = getCompleteElement(  myElement,  scope.item_catcher,  true);
+
+                    scope.item_catcher  =  (  newCatcher) ?  newCatcher :  scope.item_catcher;
+                  }  else  {
+                    finalElement  =   angular.copy(  currentList);
+                    delete  finalElement[  i];
+                  }
+
                   return finalElement;
                 }  else  {
-                  if (  currentList[  i].children.length  >  0 || Object.keys(currentList[  i].children).length > 0)  {
+                  if (  currentList[  i].children.length  >  0 || scope.auxObjectLength(currentList[  i].children).length > 0)  {
                     finalElement  =  new Object();
                     finalElement[  i]  =  new Object();
                     finalElement[  i]  =  angular.copy(  currentList[  i]);
-                    finalElement[  i].children  =  angular.merge(  new Object(), getCompleteElement(  myElement,  angular.copy(  currentList[  i].children)));
+                    finalElement[  i].children  =  angular.merge(  new Object(), getCompleteElement(  myElement,   currentList[  i].children));
                   };
                 }
               };
+
               return  finalElement;
             };
-
-
 
             var  nElement =  angular.copy(  getCompleteElement(  angular.copy(  element)));
             if  (  scope.item_catcher.length  == 0)
               scope.item_catcher  = new  Object();
-            scope.item_catcher  =  angular.merge( scope.item_catcher,  angular.copy(nElement));
-            console.log(  scope.item_catcher);
-          };
 
-          scope.auxObjectLength = function( obj)  {
-            if (  obj  === undefined)
-              return  false;
-
-            return  Object.keys(obj).length;
+            if  (  scope.auxObjectLength(  scope.item_catcher)  ==  0)
+              scope.item_catcher  =  angular.merge(  new  Object(),  scope.item_catcher,  angular.copy(nElement));
+            else
+              scope.item_catcher  =  angular.merge( scope.item_catcher,  angular.copy(nElement));
           };
 
           var  e =

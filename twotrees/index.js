@@ -42,6 +42,13 @@
 
       //test tree model 2
       $scope.roleList2 = [
+        {
+          roleName: "Windows",
+          roleId: "role1",
+          children: [
+            { roleName: "Windows 10", roleId: "role11", children: [] }
+          ]
+        }
       ];
     });
   })();
@@ -95,7 +102,7 @@
 
             
             for (  var  i in  currentList)  {
-              if (  (  currentList[  i] !==  undefined ||  scope.auxObjectLength(  currentList[  i]) ) &&  (  scope.auxObjectLength(  myElement)  >  0  &&  myElement  !==  undefined)) {
+              if (  (  currentList[  i] !==  undefined) &&  (  scope.auxObjectLength(  myElement)  &&  myElement  !==  undefined)) {
                 if (  myElement[  c.nodeLabel]  ==  currentList[  i][  c.nodeLabel])  {
                   finalElement  =  new Object();
                   if (  flag) {
@@ -116,7 +123,7 @@
                     if  (  flag)
                       finalElement  =  currentList;
                     else
-                      finalElement  =  new Object();
+                      finalElement  =  {};
                     finalElement[  i]  =  currentList[  i];
                     finalElement[  i][  c.nodeChildren]  =  getCompleteElement( myElement,  
                                                                                 currentList[  i][  c.nodeChildren],
@@ -137,9 +144,13 @@
           };
 
           scope.addOs = function(element) {
-            reOrderCatch();
-            var  nElement  =  angular.copy(  getCompleteElement(  angular.copy(  element)));
+            var  nElement  =  getCompleteElement(  angular.copy(  element));
+
+            if (  scope.auxObjectLength(  scope.item_catcher))
+              reOrderCatch();
+
             scope.item_catcher  =  angular.merge(  scope.item_catcher,  nElement);
+            console.log(  scope.item_catcher);
           };
 
           var  reOrderCatch  =  function  ()  {
@@ -154,7 +165,7 @@
 
           var  e =
               '<ul>' + 
-                '<li data-ng-repeat="node in item_binding">' + 
+                '<li data-ng-repeat="node in item_binding track by $index">' + 
                   '<i class="collapsed" data-ng-show="(auxObjectLength(node.' + d +') || node.' + d + '.length) && node.collapsed" ' + 
                       ' data-ng-click="' + a + '.selectNodeHead(node)"  ng-dblclick="'  + action + '">' + '</i>' + 
                   '<i class="expanded" data-ng-show="(auxObjectLength(node.' + d +') || node.' + d + '.length)  && !node.collapsed" ' +

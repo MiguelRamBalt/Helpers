@@ -41,22 +41,7 @@
     ];
 
     //test tree model 2
-    $scope.roleList2 = [
-      {
-        roleName: "Windows",
-        roleId: "role1",
-        children: [
-          {
-            roleName: "Windows Server",
-            roleId: "role12",
-            children: [
-              { roleName: "Windows Server 2016", roleId: "role1212", children: [] }
-            ]
-          }
-        ]
-      },
-      { roleName: "Linux", roleId: "role2", children: [] },
-    ];
+    $scope.roleList2 = [];
   });
 })();
 
@@ -75,7 +60,8 @@
           actInd =  'data-tree-childrens-action="' + ( c.treeChildrensAction  ?  (  c.treeChildrensAction) :  'add') + '"',
           g = c.tree,
           e = c.nodeLabel || "label",
-          d = c.nodeChildren || "children";
+          d = c.nodeChildren || "children",
+          merge = false;
 
         var getNoReferencedChildrenCopy = function(  element)  {
           var newElement  = new Object();
@@ -178,10 +164,13 @@
               }  else  {
                 var  cleanCath  =  scope.item_catcher;
                 var  eE  =  getCompleteElement(  angular.copy(  bCatch[  z]));
-                if (  z  >  0)
-                  scope.item_catcher  =  angular.merge(  cleanCath,  scope.item_catcher,  eE);
-                else
+                console.log(  merge);
+                if (  z  >  0  ||  merge)  {
+                  scope.item_catcher  =  angular.merge(  cleanCath, scope.item_catcher,  eE);
+                } else {
+                  merge = true;
                   scope.item_catcher  =  angular.extend(  cleanCath,  scope.item_catcher,  eE);
+                }
               };
             };
           };

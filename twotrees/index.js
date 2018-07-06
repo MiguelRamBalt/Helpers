@@ -55,7 +55,7 @@
           }
         ]
       },
-      { roleName: "Macintosh", roleId: "role3", children: [] }
+      { roleName: "Linux", roleId: "role2", children: [] },
     ];
   });
 })();
@@ -70,8 +70,6 @@
         item_binding:  '=treebinding'
       },
       link: function( scope, h, c) {
-        scope.sorted  =  false;
-
         var a = c.treeId,
           action = (  c.treeChildrensAction == "add") ? "addOs(node)" : (  c.treeChildrensAction == 'remove'  ?  "removeOs(node)" : "addOs(node)"),
           actInd =  'data-tree-childrens-action="' + ( c.treeChildrensAction  ?  (  c.treeChildrensAction) :  'add') + '"',
@@ -107,47 +105,48 @@
         var getCompleteElement  =  function(  myElement,  currentList, flag) {
           currentList  =  currentList  ||  angular.copy( scope.item),
           flag  =  flag  ||  false;
-          var finalElement   =  false;
+          var  finalElement   =  false;
+          var  newChildren  =  new  Object();
+          var  newCatch  =  new  Object();
 
           for (  var  i in  currentList)  {
             if (  (  currentList[  i] !==  undefined) &&  (  scope.auxObjectLength(  myElement)  &&  myElement  !==  undefined)) {
               if (  myElement[  c.nodeLabel]  ==  currentList[  i][  c.nodeLabel])  {
                 finalElement  =  new Object();
-                if (  flag  &&  scope.sorted  === false) {
+                if (  flag) {
                   finalElement  =  currentList;
                   delete  finalElement[  i];
-
                 }  else  {
                   finalElement[  i]  =  new Object();
                   finalElement[  i]  =  getNoReferencedChildrenCopy(  myElement);
-                  if  (  scope.sorted  === false)  {
-                    var newCatch  =  new  Object();
-                    newCatch  =  getCompleteElement(  myElement,  scope.item_catcher,  true);
-                    scope.item_catcher  =  newCatch  ?  newCatch  :  scope.item_catcher;
-                  }
+                  newCatch  =  getCompleteElement(  myElement,  scope.item_catcher,  true);
+                  scope.item_catcher  =  newCatch  ?  angular.merge(  scope.item_catcher,  newCatch)  :  scope.item_catcher;
                 }
-
                 return finalElement;
               }  else  {
-                if  (  currentList[  i][  c.nodeChildren].length  >  0)  {
+                if  (  currentList[  i][  c.nodeChildren]  &&  currentList[  i][  c.nodeChildren].length  >  0)  {
+                  finalElement  =  new  Object();
                   if  (  flag)
-                    finalElement  =  currentList;
+                    finalElement[  i]  =  currentList[  i];
                   else
-                    finalElement  =  new  Object();
+                    finalElement[  i]  =  new  Object();
 
-                  var  newChildren  =  new  Object();
                   newChildren  =  getCompleteElement( myElement,  currentList[  i][  c.nodeChildren],  flag);
                   if (  newChildren) {
+                    finalElement[  i]  =  new  Object();
                     finalElement[  i]  =  currentList[  i];
-                    finalElement[  i][  c.nodeChildren]  =  angular.copy(  newChildren);
-                  }  else  {
-                    if  (  scope.sorted  === false)  {
-                      delete  finalElement[ i];
-                    };
+
+                    finalElement[  i][  c.nodeChildren]  =  angular.copy(  scope.auxObjectLength(  newChildren)  ?  newChildren : {});
+                  } else {
+                    delete  finalElement[  i];
                   };
+                } else {
+                    delete  finalElement[  i];
                 };
-              }
-            };
+              };
+            }  else  {
+                finalElement  =  {};
+              };
           };
 
           return  finalElement;
@@ -161,10 +160,8 @@
         };
 
         scope.addOs = function(element) {
-          if (  scope.auxObjectLength(  scope.item_catcher)  > 0  &&  scope.sorted === false)  {
-            reOrderCatch(  angular.copy(  scope.item_catcher));
-            scope.sorted  =  true;
-          };
+          reOrderCatch(  scope.item_catcher);
+
           var  nElement  =  getCompleteElement(  angular.copy(  element));
           scope.item_catcher  =  angular.merge(  scope.item_catcher,  nElement);
         };
@@ -172,16 +169,19 @@
         var  reOrderCatch  =  function  (  myList)  {
           myList  =  myList ||  scope.item_catcher;
 
-          var  bCatch  =  myList;
+          var  bCatch  =  angular.copy(  myList);
 
           for(  var  z  in  bCatch)  {
             if (  scope.auxObjectLength(  bCatch[  z])) {
               if  (  scope.auxObjectLength(  bCatch[  z][  c.nodeChildren])  ||  bCatch[  z][  c.nodeChildren].length > 0)  {
                 reOrderCatch(  angular.copy(  myList[  z][  c.nodeChildren]));
               }  else  {
-                var  eE  =  getCompleteElement(  angular.copy(  bCatch[  z]));
                 var  cleanCath  =  scope.item_catcher;
-                scope.item_catcher  =  angular.merge(  cleanCath,  eE);
+                var  eE  =  getCompleteElement(  angular.copy(  bCatch[  z]));
+                if (  z  >  0)
+                  scope.item_catcher  =  angular.merge(  cleanCath,  scope.item_catcher,  eE);
+                else
+                  scope.item_catcher  =  angular.extend(  cleanCath,  scope.item_catcher,  eE);
               };
             };
           };

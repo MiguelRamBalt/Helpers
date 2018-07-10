@@ -162,32 +162,32 @@
           scope.removeOs  =  function(  element)  {
            // Clousure to use Analize the receiver tree container.
             var getRemovedList  =  function(  myElement,  currentList) {
-                currentList  =  currentList  ||  angular.copy(  scope.item_binding);
-        
-                var finalElement   =  {};
-                for (var  i in  currentList)  {
-                  var j  =  angular.copy(  i);
-                  if( currentList[ i]) {
-                    if (  myElement[  attributes.nodeLabel]  ==  currentList[  i][  attributes.nodeLabel])  {
-                        finalElement  =  angular.copy( currentList);
-                        delete finalElement[  i];
-                        break;
-                    }  else  {
-                        if (  currentList[  j][  attributes.nodeChildren].length  >  0 || scope.auxObjectLength(currentList[  j][  attributes.nodeChildren]) > 0)  {
-                          finalElement =  currentList;
-                          finalElement[  j]  =   currentList[  j];
-                          finalElement[  j][  attributes.nodeChildren]  =  getRemovedList(  myElement,  currentList[  j][  attributes.nodeChildren]);
-                          if (   scope.auxObjectLength(  finalElement[  j][  attributes.nodeChildren]) == 0  && finalElement[ j].isFolder)
-                            delete  finalElement[  j];
-                        };
+              currentList = currentList || angular.copy(  scope.item);
+
+              for (  var x  in  currentList) {
+                if (  currentList[ x]) {
+                  if (  currentList[  x][ attributes.nodeLabel] == myElement[ attributes.nodeLabel]) {
+                    delete  currentList[  x];
+
+                    return  currentList;
+                  }  else {
+                    if (  scope.auxObjectLength(  currentList[  x][ attributes.nodeChildren]) > 0) {
+                      currentList[  x][  attributes.nodeChildren]  =  getRemovedList(  myElement,  angular.copy( currentList[  x][ attributes.nodeChildren]));
+
+                      if (  scope.auxObjectLength(  currentList[  x][  attributes.nodeChildren])  ==  0 &&  currentList[  x].isFolder)
+                        delete  currentList[  x];
+
+                      if (  scope.auxObjectLength(  currentList)  ==  0)
+                        currentList = new Object();
                     };
                   };
                 };
-                return  finalElement;
+              };
+
+              return  currentList;
             };
-            console.log(  angular.copy(  scope.item_binding));
-            scope.item_binding =  getRemovedList(  element);
-            console.log(  angular.copy(  scope.item_binding));
+
+            scope.item  =  getRemovedList(  element,  scope.item);
           };
 
           var  reOrderCatch  =  function  (  myList)  {
@@ -212,21 +212,21 @@
               };
             };
           };
-          //var init =  function() {
-            var  e =
-                '<ul>' + 
-                  '<li data-ng-repeat="node in item_binding track by $index">' + 
-                    '<i class="collapsed" data-ng-show="(  (auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length) && node.collapsed" ' + 
+
+          var  e =
+                '<ul>' +
+                  '<li data-ng-repeat="node in item_binding track by $index">' +
+                    '<i class="collapsed" data-ng-show="(  (auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length) && node.collapsed" ' +
                         ' data-ng-click="' + a + '.selectNodeHead(node)"  ng-dblclick="'  + action + '">' + '</i>' +
-                    '<i class="expanded" data-ng-show="((  auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length)  && !node.collapsed" ' + ' data-ng-click="' + a + '.selectNodeHead(node)"  ng-dblclick="'  + action + '"></i>' + 
+                    '<i class="expanded" data-ng-show="((  auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length)  && !node.collapsed" ' + ' data-ng-click="' + a + '.selectNodeHead(node)"  ng-dblclick="'  + action + '"></i>' +
                     '<i class="normal" data-ng-hide="(node.isFolder ||  node === empty  || node.' + d + '.length  || auxObjectLength(node.' + d +') != 0)" ng-dblclick="'  + action + '"></i>' +
-                    '<span data-ng-hide="(  node.isFolder && auxObjectLength(  node.' + d +') == 0)" data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="'  + action + '"> ' + 
-                      '{{node.' + e +'}}' + 
+                    '<span data-ng-hide="(  node.isFolder && auxObjectLength(  node.' + d +') == 0)" data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="'  + action + '"> ' +
+                      '{{node.' + e +'}}' +
                     '</span>' +
                     '<div tree-model data-ng-hide="(node.collapsed || node.' + d +' === empty)" data-tree-id="' + a + '" tree="item"  treecatcher="item_catcher" treebinding="node.'+ d +'" ' + actInd +
                         ' data-node-id=' + (attributes.nodeId || "id") + ' data-node-label=' + e + ' data-node-children=' + d + '>' +
-                    '</div>' + 
-                  '</li>' + 
+                    '</div>' +
+                  '</li>' +
                 '</ul>';
             a &&
               g &&

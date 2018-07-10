@@ -213,14 +213,19 @@
             };
           };
 
+          scope.collapse = function(  nodeSelected) {
+            if  ( scope.auxObjectLength(    nodeSelected[   attributes.nodeChildren])  >  0)
+              nodeSelected.collapsed = !nodeSelected.collapsed;
+          };
+
           var  e =
                 '<ul>' +
                   '<li data-ng-repeat="node in item_binding track by $index">' +
                     '<i class="collapsed" data-ng-show="(  (auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length) && node.collapsed" ' +
-                        ' data-ng-click="' + a + '.selectNodeHead(node)"  ng-dblclick="'  + action + '">' + '</i>' +
-                    '<i class="expanded" data-ng-show="((  auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length)  && !node.collapsed" ' + ' data-ng-click="' + a + '.selectNodeHead(node)"  ng-dblclick="'  + action + '"></i>' +
+                        ' data-ng-click="collapse(node)"  ng-dblclick="'  + action + '">' + '</i>' +
+                    '<i class="expanded" data-ng-show="((  auxObjectLength(node.' + d +') > 0  && node.isFolder) || node.' + d + '.length)  && !node.collapsed" ' + ' data-ng-click="collapse(node)"  ng-dblclick="'  + action + '"></i>' +
                     '<i class="normal" data-ng-hide="(node.isFolder ||  node === empty  || node.' + d + '.length  || auxObjectLength(node.' + d +') != 0)" ng-dblclick="'  + action + '"></i>' +
-                    '<span data-ng-hide="(  node.isFolder && auxObjectLength(  node.' + d +') == 0)" data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="'  + action + '"> ' +
+                    '<span data-ng-hide="(  node.isFolder && auxObjectLength(  node.' + d +') == 0)"  ng-click="collapse( node)"  data-ng-class="node.selected" data-ng-c2lick="' + a + '.selectNodeLabel(node)"  ng-dblclick="'  + action + '"> ' +
                       '{{node.' + e +'}}' +
                     '</span>' +
                     '<div tree-model data-ng-hide="(node.collapsed || node.' + d +' === empty)" data-tree-id="' + a + '" tree="item"  treecatcher="item_catcher" treebinding="node.'+ d +'" ' + actInd +
@@ -228,27 +233,8 @@
                     '</div>' +
                   '</li>' +
                 '</ul>';
-            a &&
-              g &&
-              (attributes.angularTreeview &&
-                ((scope[a] = scope[a] || {}),
-                (scope[a].selectNodeHead =
-                  scope[a].selectNodeHead ||
-                  function(a) {
-                    a.collapsed = !a.collapsed;
-                  }),
-                (scope[a].selectNodeLabel =
-                  scope[a].selectNodeLabel ||
-                  function(c) {
-                    scope[a].currentNode &&
-                      scope[a].currentNode.selected &&
-                      (scope[a].currentNode.selected = void 0);
-                    attributes.selected = "selected";
-                    scope[a].currentNode = c;
-                  })),
-              element.html("").append($compile(e)(scope)));
-         //};
-          //init();
+
+          element.html("").append($compile(e)(scope));
         }
       };
     });

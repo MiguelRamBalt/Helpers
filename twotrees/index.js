@@ -56,36 +56,36 @@
           item_catcher:  '=treecatcher',
           item_binding:  '=treebinding'
         },
-        link: function( scope, h, c) {
-          var a = c.treeId,
-            action = (  c.treeChildrensAction == "add") ? "addOs(node)" : (  c.treeChildrensAction == 'remove'  ?  "removeOs(node)" : "addOs(node)"),
-            actInd =  'data-tree-childrens-action="' + ( c.treeChildrensAction  ?  (  c.treeChildrensAction) :  'add') + '"',
-            g = c.tree,
-            e = c.nodeLabel || "label",
-            d = c.nodeChildren || "children",
+        link: function( scope, element, attributes) {
+          var a = attributes.treeId,
+            action = (  attributes.treeChildrensAction == "add") ? "addOs(node)" : (  attributes.treeChildrensAction == 'remove'  ?  "removeOs(node)" : "addOs(node)"),
+            actInd =  'data-tree-childrens-action="' + ( attributes.treeChildrensAction  ?  (  attributes.treeChildrensAction) :  'add') + '"',
+            g = attributes.tree,
+            e = attributes.nodeLabel || "label",
+            d = attributes.nodeChildren || "children",
             merge = false;
 
           var getNoReferencedChildrenCopy = function(  element)  {
             var newElement  = new Object();
-            newElement[  c.nodeLabel]  =  element[  c.nodeLabel];
-            newElement[  c.nodeId]  =  element[  c.nodeId];
-            newElement[  c.nodeChildren]  = new  Object();
-            if (  element[  c.nodeChildren]  &&  (element[  c.nodeChildren].length  > 0  ||  scope.auxObjectLength(  element[  c.nodeChildren])  >  0)) {
-              for  (var  j  in  element[  c.nodeChildren])  {
-                newElement[  c.nodeChildren][  j]  =  new  Object();
-                if (  element[  c.nodeChildren][  j].length  > 0  ||  scope.auxObjectLength(  element[  c.nodeChildren][  j])  >  0) {
-                  newElement[  c.nodeChildren][  j]  =  angular.copy(  getNoReferencedChildrenCopy(  element[  c.nodeChildren][  j]));
+            newElement[  attributes.nodeLabel]  =  element[  attributes.nodeLabel];
+            newElement[  attributes.nodeId]  =  element[  attributes.nodeId];
+            newElement[  attributes.nodeChildren]  = new  Object();
+            if (  element[  attributes.nodeChildren]  &&  (element[  attributes.nodeChildren].length  > 0  ||  scope.auxObjectLength(  element[  attributes.nodeChildren])  >  0)) {
+              for  (var  j  in  element[  attributes.nodeChildren])  {
+                newElement[  attributes.nodeChildren][  j]  =  new  Object();
+                if (  element[  attributes.nodeChildren][  j].length  > 0  ||  scope.auxObjectLength(  element[  attributes.nodeChildren][  j])  >  0) {
+                  newElement[  attributes.nodeChildren][  j]  =  angular.copy(  getNoReferencedChildrenCopy(  element[  attributes.nodeChildren][  j]));
                   newElement[  'isFolder']  =  true;
                 }  else  {
-                  newElement[  c.nodeChildren][  j][  c.nodeLabel]  =  element[  c.nodeChildren][  j][  c.nodeLabel];
-                  newElement[  c.nodeChildren][  j][  c.nodeId]  =  element[  c.nodeChildren][  j][  c.nodeId];
-                  newElement[  c.nodeChildren][  j][  c.nodeChildren]  =  [];
+                  newElement[  attributes.nodeChildren][  j][  attributes.nodeLabel]  =  element[  attributes.nodeChildren][  j][  attributes.nodeLabel];
+                  newElement[  attributes.nodeChildren][  j][  attributes.nodeId]  =  element[  attributes.nodeChildren][  j][  attributes.nodeId];
+                  newElement[  attributes.nodeChildren][  j][  attributes.nodeChildren]  =  [];
                 }
               }
             }  else  {
-              newElement[  c.nodeLabel]  =  element[  c.nodeLabel];
-              newElement[  c.nodeId]  =  element[  c.nodeId];
-              newElement[  c.nodeChildren]  =  [];
+              newElement[  attributes.nodeLabel]  =  element[  attributes.nodeLabel];
+              newElement[  attributes.nodeId]  =  element[  attributes.nodeId];
+              newElement[  attributes.nodeChildren]  =  [];
             }
 
             return newElement;
@@ -100,7 +100,7 @@
 
             for (  var  i in  currentList)  {
               if (  (  currentList[  i] !==  undefined) &&  (  scope.auxObjectLength(  myElement)  &&  myElement  !==  undefined)) {
-                if (  myElement[  c.nodeLabel]  ==  currentList[  i][  c.nodeLabel])  {
+                if (  myElement[  attributes.nodeLabel]  ==  currentList[  i][  attributes.nodeLabel])  {
                   finalElement  =  new Object();
                   if (  flag) {
                     finalElement  =  currentList;
@@ -108,26 +108,26 @@
                   }  else  {
                     finalElement[  i]  =  new Object();
                     finalElement[  i]  =  getNoReferencedChildrenCopy(  myElement);
-                    if (  scope.auxObjectLength(  finalElement[  i][ c.nodeChildren]) > 0)
+                    if (  scope.auxObjectLength(  finalElement[  i][ attributes.nodeChildren]) > 0)
                       finalElement[  i][  'isFolder']  =  true;
                     newCatch  =  getCompleteElement(  myElement,  scope.item_catcher,  true);
                     scope.item_catcher  =  newCatch  ?  angular.merge(  scope.item_catcher,  newCatch)  :  scope.item_catcher;
                   }
                   return finalElement;
                 }  else  {
-                  if  (  currentList[  i][  c.nodeChildren]  &&  currentList[  i][  c.nodeChildren].length  >  0)  {
+                  if  (  currentList[  i][  attributes.nodeChildren]  &&  currentList[  i][  attributes.nodeChildren].length  >  0)  {
                     finalElement  =  new  Object();
                     if  (  flag)
                       finalElement[  i]  =  currentList[  i];
                     else
                       finalElement[  i]  =  new  Object();
 
-                    newChildren  =  getCompleteElement( myElement,  currentList[  i][  c.nodeChildren],  flag);
+                    newChildren  =  getCompleteElement( myElement,  currentList[  i][  attributes.nodeChildren],  flag);
                     if (  newChildren) {
                       finalElement[  i]  =  new  Object();
                       finalElement[  i]  =  currentList[  i];
 
-                      finalElement[  i][  c.nodeChildren]  =  angular.copy(  scope.auxObjectLength(  newChildren)  ?  newChildren : {});
+                      finalElement[  i][  attributes.nodeChildren]  =  angular.copy(  scope.auxObjectLength(  newChildren)  ?  newChildren : {});
                       finalElement[  i][  'isFolder']  =  true;
                     } else {
                       delete  finalElement[  i];
@@ -168,16 +168,16 @@
                 for (var  i in  currentList)  {
                   var j  =  angular.copy(  i);
                   if( currentList[ i]) {
-                    if (  myElement[  c.nodeLabel]  ==  currentList[  i][  c.nodeLabel])  {
+                    if (  myElement[  attributes.nodeLabel]  ==  currentList[  i][  attributes.nodeLabel])  {
                         finalElement  =  angular.copy( currentList);
                         delete finalElement[  i];
                         break;
                     }  else  {
-                        if (  currentList[  j][  c.nodeChildren].length  >  0 || scope.auxObjectLength(currentList[  j][  c.nodeChildren]) > 0)  {
+                        if (  currentList[  j][  attributes.nodeChildren].length  >  0 || scope.auxObjectLength(currentList[  j][  attributes.nodeChildren]) > 0)  {
                           finalElement =  currentList;
                           finalElement[  j]  =   currentList[  j];
-                          finalElement[  j][  c.nodeChildren]  =  getRemovedList(  myElement,  currentList[  j][  c.nodeChildren]);
-                          if (   scope.auxObjectLength(  finalElement[  j][  c.nodeChildren]) == 0  && finalElement[ j].isFolder)
+                          finalElement[  j][  attributes.nodeChildren]  =  getRemovedList(  myElement,  currentList[  j][  attributes.nodeChildren]);
+                          if (   scope.auxObjectLength(  finalElement[  j][  attributes.nodeChildren]) == 0  && finalElement[ j].isFolder)
                             delete  finalElement[  j];
                         };
                     };
@@ -197,8 +197,8 @@
 
             for(  var  z  in  bCatch)  {
               if (  scope.auxObjectLength(  bCatch[  z])) {
-                if  (  scope.auxObjectLength(  bCatch[  z][  c.nodeChildren])  ||  bCatch[  z][  c.nodeChildren].length > 0)  {
-                  reOrderCatch(  angular.copy(  myList[  z][  c.nodeChildren]));
+                if  (  scope.auxObjectLength(  bCatch[  z][  attributes.nodeChildren])  ||  bCatch[  z][  attributes.nodeChildren].length > 0)  {
+                  reOrderCatch(  angular.copy(  myList[  z][  attributes.nodeChildren]));
                 }  else  {
                   var  cleanCath  =  scope.item_catcher;
                   var  eE  =  getCompleteElement(  angular.copy(  bCatch[  z]));
@@ -224,13 +224,13 @@
                       '{{node.' + e +'}}' + 
                     '</span>' +
                     '<div tree-model data-ng-hide="(node.collapsed || node.' + d +' === empty)" data-tree-id="' + a + '" tree="item"  treecatcher="item_catcher" treebinding="node.'+ d +'" ' + actInd +
-                        ' data-node-id=' + (c.nodeId || "id") + ' data-node-label=' + e + ' data-node-children=' + d + '>' +
+                        ' data-node-id=' + (attributes.nodeId || "id") + ' data-node-label=' + e + ' data-node-children=' + d + '>' +
                     '</div>' + 
                   '</li>' + 
                 '</ul>';
             a &&
               g &&
-              (c.angularTreeview &&
+              (attributes.angularTreeview &&
                 ((scope[a] = scope[a] || {}),
                 (scope[a].selectNodeHead =
                   scope[a].selectNodeHead ||
@@ -243,10 +243,10 @@
                     scope[a].currentNode &&
                       scope[a].currentNode.selected &&
                       (scope[a].currentNode.selected = void 0);
-                    c.selected = "selected";
+                    attributes.selected = "selected";
                     scope[a].currentNode = c;
                   })),
-              h.html("").append($compile(e)(scope)));
+              element.html("").append($compile(e)(scope)));
          //};
           //init();
         }
